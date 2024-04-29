@@ -1,34 +1,50 @@
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ReactLenis, useLenis } from 'lenis/react'
-import { useRef} from "react";
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ReactLenis, useLenis } from 'lenis/react';
+import { useEffect, useRef } from "react";
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
+// console.log(ScrollTrigger)
 
 export default function Home() {
-  const container = useRef();
+  const lenisRef = useRef()
 
-//   useGSAP(() => {
-//     gsap.to(circle.current, { 
-//       rotation: "+=360", 
-//       duration: 5,
-//       repeat: -1,
-//       ease: "none",
-//     });
-//   },
-//   { dependencies: [], scope: container } //Circle will only animate inside the scope of container. We then useEffect and pass dependency of [] to render on mount.
-// ); 
+  useGSAP(() => {
+    const timeln = gsap.timeline({ paused: true });
+    timeln.fromTo(".col_left", { y: 0 }, { y: '170vh', duration: 1, ease: 'none' });
 
-  //enabling Lenis
-  // const lenis = useLenis(({ scroll }) => {
+    ScrollTrigger.create({
+      animation: timeln,
+      trigger: "#vertical",
+      start: 'top top',
+      end: 'bottom center',
+      scrub: true,
+    });
+  }, { dependencies: [], revertOnUpdate: true });
 
-  // })
+
+  // enabling Lenis
+  useLenis(() => {
+      ScrollTrigger.refresh()
+    })
+
+    useEffect(() => {
+      function update(time) {
+        lenisRef.current?.lenis?.raf(time * 1000)
+        // ScrollTrigger.refresh()
+      }
+      gsap.ticker.add(update);
+      return () => {
+        gsap.ticker.remove(update)
+      }
+    }, [])
 
 
     return (
-      <ReactLenis root>
+      <ReactLenis ref={lenisRef} autoRaf={false} root>
         <section id="vertical">
-          <div className="container" ref={container}>
+          <div className="container">
             <div className="vertical__content">
               <div className="col col_left">
                 <h2 className="vertical__heading"><span>About</span><span>Pursuit</span><span>Tutoring</span></h2>

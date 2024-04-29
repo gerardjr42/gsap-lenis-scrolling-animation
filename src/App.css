@@ -26,7 +26,7 @@ h2 {
   font-size: 72px;
   font-weight: 900;
   line-height: 85%;
-  border-left: 3px solid #ff98a2;
+  border-left: 3px solid #0a3fff;
   padding: 25px;
   margin: 0;
 }
@@ -37,8 +37,7 @@ h2 span {
 
 h3 {
   font-size: 42px;
-  font-stretch: expanded;
-  color: #ff98a2;
+  color: #0a3fff;
   line-height: 100%;
 }
 
