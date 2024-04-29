@@ -9,21 +9,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Home() {
   const lenisRef = useRef()
-
-  useGSAP(() => {
-    const timeln = gsap.timeline({ paused: true });
-    timeln.fromTo(".col_left", { y: 0 }, { y: '170vh', duration: 1, ease: 'none' });
-
-    ScrollTrigger.create({
-      animation: timeln,
-      trigger: "#vertical",
-      start: 'top top',
-      end: 'bottom center',
-      scrub: true,
-    });
-  }, { dependencies: [], revertOnUpdate: true });
-
-
+  const horizontalRef = useRef()
+  
   // enabling Lenis
   useLenis(() => {
       ScrollTrigger.refresh()
@@ -39,6 +26,38 @@ export default function Home() {
         gsap.ticker.remove(update)
       }
     }, [])
+
+  //GSAP animation for vertical section
+  useGSAP(() => {
+    const timeln = gsap.timeline({ paused: true });
+    timeln.fromTo(".col_left", { y: 0 }, { y: '170vh', duration: 1, ease: 'none' });
+
+    ScrollTrigger.create({
+      animation: timeln,
+      trigger: "#vertical",
+      start: 'top top',
+      end: 'bottom center',
+      scrub: true,
+    });
+  }, { dependencies: [], revertOnUpdate: true });
+
+  //GSAP animation for horizontal section
+  useGSAP(() => {
+    let boxItems = gsap.utils.toArray(".horizontal__item");
+
+    gsap.to(boxItems, {
+      xPercent: -50 * (boxItems.length -1),
+      ease: "sine.out",
+      scrollTrigger: {
+        trigger: horizontalRef.current,
+        pin: true,
+        scrub: 3,
+        snap: 1 / (boxItems.length -1),
+        end: `+=${horizontalRef.current.offsetWidth}`,
+      }
+    });
+  }, []);
+
 
 
     return (
@@ -62,6 +81,27 @@ export default function Home() {
                   <h3>How to book a session</h3>
                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, obcaecati? Corporis quos officia mollitia blanditiis, tempore consequatur quasi cupiditate nesciunt. Nulla consectetur magni praesentium doloremque qui deserunt, veritatis exercitationem provident?</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="horizontal" ref={horizontalRef}>
+          <div className="container">
+            <div className="horizontal__content">
+              <div className="horizontal__item">
+                <div className="horizontal__num">1</div>
+              </div>
+              <div className="horizontal__item">
+                <div className="horizontal__num">2</div>
+              </div>
+              <div className="horizontal__item">
+                <div className="horizontal__num">3</div>
+              </div>
+              <div className="horizontal__item">
+                <div className="horizontal__num">4</div>
+              </div>
+              <div className="horizontal__item">
+                <div className="horizontal__num">5</div>
               </div>
             </div>
           </div>
